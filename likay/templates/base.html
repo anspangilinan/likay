@@ -20,7 +20,9 @@
         <div class="navbar navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="{% url 'index' %}">LIKAY</a>
+                    <a class="navbar-brand" href="{% url 'index' %}">
+                        <img src = "static/img/small-square.jpg"><span>LIKAY</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -34,7 +36,7 @@
                     <hr />
                     {% block bottom_content %}{% endblock %}
                 </div>
-                <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                <div class="col-xs-12 col-sm-3 sidebar-offcanvas shoutout-messages" id="sidebar" role="navigation">
                     {% block right_content %}{% endblock %}
                 </div>
             </div>
