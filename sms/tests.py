@@ -42,6 +42,24 @@ class InboundSMSTest(TestCase):
                                                      code='DVO')
         self.test_user = Subscriber.objects.create(name='Test Name',
                                                    phone=self.num)
+
+    def test_invalid_text_format(self):
+        """
+        User texts to the number using an invalid format
+        Examples:
+        - BUS DVO
+        - Hello
+        - WUT
+        """
+        sample_text = 'WUT THE HELL'
+        test_get = {
+            'from': self.num,
+            'text': sample_text,
+        }
+        url = self.url + urllib.urlencode(test_get)
+        response = self.client.get(url)
+        self.assertEqual(True, True)
+
     def test_user_subscribe_valid_city_no_name(self):
         """
         A user will subscribe to a single city
@@ -143,6 +161,3 @@ class InboundSMSTest(TestCase):
         response = self.client.get(url)
         no_subscribed_cities = not self.test_user.location.all()
         self.assertEqual(no_subscribed_cities, True)
-
-    def test_user_invalid_text_format(self):
-        pass

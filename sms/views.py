@@ -1,7 +1,8 @@
 # Python Imports
 
 # Django Imports
-from django.http import HttpResponse
+from django.http import HttpResponseNotModified
+from django.shortcuts import redirect
 
 # Models
 from accounts.models import Subscriber
@@ -24,8 +25,9 @@ def inbound_sms(request):
     """
     This view will catch the user's sms through a GET request from youphoric server.
     """
-    if request.method == "GET":
-        # Slice the text format: TYPE<space>CITY<space>NAME
+    if request.method == "GET" and 'text' in request.GET and 'from' in request.GET:
+        # TO-DO PAT: check GET if 'smsc' is 'strikerS6800in1ngin' 
+        # (and add that to source smsc in settings)?
         content = {
             'text': request.GET['text'].split(),
             'num': request.GET['from']
@@ -38,9 +40,10 @@ def inbound_sms(request):
             post_message(content)
         else:
             pass
-            # Will send sms to user that their sms format is invalid
-
-    return HttpResponse("awesomeness!")
+            # TO-DO: Send sms to user that their sms format is invalid
+        return HttpResponseNotModified()
+    else:
+        return redirect('index')
 
 
 def subscribe(data):
