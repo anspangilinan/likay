@@ -20,28 +20,22 @@ KEYWORD = {
 }
 
 
-def get_text_content(data):
-    content = data['text'][0].split(' ')
-    return content
-
-def sms(request):
+def inbound_sms(request):
     """
     This view will catch the user's sms through a GET request from youphoric server.
     """
     if request.method == "GET":
-        data = {u'svc_id': [u'0'], u'rrn': [u'410063049575'], u'from': [u'639998419831'], u'text': [u'MSG Wala pa niabot ang mga relief goods sa among baryo.'], u'smsc': [u'strikerS6800in1ngin'], u'to': [u'68002'], u'utime': [u'1385197906']}
-
         # Slice the text format: TYPE<space>CITY<space>NAME
-        content = get_text_content(data)
-        # Check what type of sms [SUB, UNSUB]
-        if KEYWORD['subscribe'] == content[0]:
-            print "subscribe"
-            subscribe(data)
-        elif KEYWORD['unsubscribe'] == content[0]:
-            print "unsubscribe"
-            unsubscribe(data)
-        elif KEYWORD['message'] == content[0]:
-            post_message(data)
+        content = {
+            'text': request.GET['text'].split(),
+            'num': request.GET['from']
+        }
+        if KEYWORD['subscribe'] == content['text'][0]:
+            subscribe(content)
+        elif KEYWORD['unsubscribe'] == content['text'][0]:
+            unsubscribe(content)
+        elif KEYWORD['message'] == content['text'][0]:
+            post_message(content)
         else:
             pass
             # Will send sms to user that their sms format is invalid
@@ -53,22 +47,22 @@ def subscribe(data):
     """
     This function will check and save the user's data
     """
-    # Slice the text format: TYPE<space>CITY<space>NAME
-    content = get_text_content(data)
-
     # Get location
-    location = Location.objects.get(code=str(content[1]))
+    location = Location.objects.filter(code=data['text'][1])
 
-    # Check if the number already exist in the database
-    subscriber, created = Subscriber.objects.get_or_create(phone=str(data['from'][0]))
-    if created:
-    	# Save name (optional)
-    	try:
-        	subscriber.name = content[2]
-        except IndexError, e:
-        	pass
-    subscriber.location.add(location)
-    subscriber.save()
+    if location.exists():
+        # Check if the number already exist in the database
+        subscriber, created = Subscriber.objects.get_or_create(phone=data['num'])
+        if created:
+            # Save name (optional)
+            name = ' '.join(data['text'][2:])
+            if name:
+                subscriber.name = name
+        subscriber.location.add(location[0])
+        subscriber.save()
+    else:
+        # Send SMS to the user that the CITY is not valid
+        pass
 
 
 def unsubscribe(data):
@@ -76,13 +70,20 @@ def unsubscribe(data):
     This function will check and unscubscribe the user's data
     """
     # Slice the text format: TYPE<space>CITY<space>NAME
-    content = get_text_content(data)
-    # Get location
-    location = Location.objects.get(code=str(content[1]))
+    location = Location.objects.filter(code=data['text'][1])
+    subscriber = Subscriber.objects.filter(phone=data['num'])
 
-    subscriber = Subscriber.objects.get(phone=str(data['from'][0]))
-    subscriber.location.remove(location)
-    subscriber.save()
+    if location.exists() and subscriber.exists():
+        subscriber = subscriber[0]
+        if location[0] in subscriber.location.all():
+            subscriber.location.remove(location[0])
+            subscriber.save()
+        else:
+            # user is not subscribed to the city
+            pass
+    else:
+        # location and user does not exist: do something
+        pass
 
 
 def post_message(data):
@@ -98,17 +99,17 @@ def post_message(data):
         message = content[1]
         subscriber = Subscriber.objects.get(phone=str(data['from'][0]))
     except IndexError, e:
-    	# Error: Send error message
-    	pass
+        # Error: Send error message
+        pass
     except Subscriber.DoesNotExist, e:
         # Error: Send error message
         pass
-
     else:
-    	# Save Message
+        # Save Message
         message = Message.objects.create(content=message,
-										 subscriber=subscriber)
-    	message.save()
-    	# Add Facebook and twitter post here
-    	#post_to_twitter(data['text'][0])
+                                         subscriber=subscriber)
+        message.save()
+        # Add Facebook and twitter post here
+        #post_to_twitter(data['text'][0])
         post_to_facebook(data['text'][0])
+

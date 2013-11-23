@@ -15,6 +15,7 @@ class Location(models.Model):
     def __unicode__(self):
         return "%s" % self.name
 
+
 class Status(models.Model):
     """
     Status of the weather; Parsed from the Weather API;
