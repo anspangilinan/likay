@@ -4,18 +4,27 @@ import sys
 import requests
 import json
 
+# Storm Category
+# - Signal no. 1 - 30-60kph
+# - Signal no. 2 - 60-100kph
+# - Signal no. 3 - 100-185kph
+# - Signal no. 4 - 185kph up
+
 def fetch_weather_data():
 	# http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
 	weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/currenthurricane/view.json"
 	response = json.loads(requests.get(weather_query).content)
 	hurricanes = response['currenthurricane']
 	#for development simulation
-	# hurricanes = [{
-	#  'forecast': [{
-	#  	'lat': 7.0644,
-	# 	'lon': 125.6078,
-	#  }]
-	# }]
+	hurricanes = [{
+	 'forecast': [{
+	 	'lat': 7.0644,
+		'lon': 125.6078,
+		'WindSpeed': {
+			'Kph': 120,
+		}
+	 }]
+	}]
 	
 	for hurricane in hurricanes:
 		current_forecast = hurricane['forecast'][-1]
@@ -24,16 +33,32 @@ def fetch_weather_data():
 
 		nearby_location = get_nearby_location(latitude, longitude)
 		if (nearby_location):
-			print "send sms to " + nearby_location.name
+			wind_speed = current_forecast['WindSpeed']['Kph']
+			
+			print "send sms to " + nearby_location.name + " " + compare_storm_signals(wind_speed)
 			# send_sms(nearby_location)
+
 	return 'success'
+
+
+def compare_storm_signals(wind_speed):
+	if wind_speed > 30 and wind_speed <=60:
+		return 'Storm Signal No. 1.'
+	elif wind_speed > 60 and wind_speed <=100:
+		return 'Storm Signal No. 2'
+	elif wind_speed > 100 and wind_speed <=185:
+		return 'Storm Signal No. 3'
+	elif wind_speed > 185:
+		return 'Storm Signal No. 4'
 
 
 def get_nearby_location(latitude, longitude):
 	from core.models import Location
-	location_query = "http://api.geonames.org/findNearbyPlaceNameJSON?lat=%f&lng=%f&username=ferower" % (latitude, longitude)
+	location_query = "http://ws.geonames.org/findNearbyPlaceNameJSON?lat=%f&lng=%f&username=ferower" % (latitude, longitude)
+	print "location query: "
 	response = json.loads(requests.get(location_query).content)
 	if response.has_key('geonames'):
+		print "geonames"
 		place_names = response['geonames']
 		if len(place_names) > 0:
 			place_name = place_names[0]['toponymName']
