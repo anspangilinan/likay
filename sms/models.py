@@ -15,12 +15,18 @@ class Message(models.Model):
     @property location   - Subscribers location so as we message could be filtered by location (Optional field)
     @property subscriber - Subcriber sending the message
     """
-    content    = models.TextField(**_optional_kwargs)
-    location   = models.OneToOneField(Location, **_optional_kwargs)
-    subscriber = models.OneToOneField(Subscriber, **_optional_kwargs)
+    content       = models.TextField(**_optional_kwargs)
+    location      = models.OneToOneField(Location, **_optional_kwargs)
+    subscriber    = models.OneToOneField(Subscriber, **_optional_kwargs)
+    date_received = models.DateTimeField(**_optional_kwargs)
 
     def __unicode__(self):
         return "Message ID: %s - %s" % (self.id, self.content)
+
+    def save(self,*args,**kwargs):
+        if not self.id:
+            self.date_received = datetime.datetime.now()
+        super(Message, self).save(*args, **kwargs)
 
 
 class MessageTemplate(models.Model):
