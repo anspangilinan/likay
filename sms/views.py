@@ -59,6 +59,7 @@ def location_list(city_string):
     location = Location.objects.filter(Q(code__iexact=city_string) | Q(name__iexact=city_string))
     return location
 
+
 def subscribe(data):
     """
     This function will check and save the user's data
@@ -164,13 +165,10 @@ def info(data):
     """
     try:
         num = str(data['num'])
-        print num
         subscriber = Subscriber.objects.get(phone=num)
-        print subscriber
         # http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
         locations = subscriber.location.all()
         # Send messages for all locations of subscriber
-        message = ''
         for location in locations:
             weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/%s.json" % location.name.lower()
             response = json.loads(requests.get(weather_query).content)
