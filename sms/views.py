@@ -1,6 +1,7 @@
 # Python Imports
 
 # Django Imports
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
@@ -10,7 +11,7 @@ from core.models import Location
 from sms.models import Message
 
 # Utils
-from sms.utils import post_to_twitter, post_to_facebook
+from sms.utils import send_sms, post_to_twitter, post_to_facebook, invalid_city_message
 
 
 # KEYWORDS *note: value should be unicode
@@ -18,6 +19,7 @@ KEYWORD = {
     'subscribe'  : u'SUB',
     'unsubscribe': u'UNSUB',
     'message'    : u'MSG',
+    'info'       : u'INFO',
 }
 
 
@@ -38,6 +40,8 @@ def inbound_sms(request):
             unsubscribe(content)
         elif KEYWORD['message'] == content['text'][0]:
             post_message(content)
+        elif KEYWORD['info'] == content['text'][0]:
+            info(content)
         else:
             pass
             # TO-DO: Send sms to user that their sms format is invalid
@@ -46,12 +50,17 @@ def inbound_sms(request):
         return redirect('index')
 
 
+def location_list(city_string):
+    location = Location.objects.filter(Q(code__iexact=city_string) | Q(name__iexact=city_string))
+    return location
+
 def subscribe(data):
     """
     This function will check and save the user's data
     """
     # Get location
-    location = Location.objects.filter(code=data['text'][1])
+    city = data['text'][1]
+    location = location_list(city)
 
     if location.exists():
         # Check if the number already exist in the database
@@ -65,6 +74,8 @@ def subscribe(data):
         subscriber.save()
     else:
         # Send SMS to the user that the CITY is not valid
+        message = invalid_city_message(city)
+        # send_sms(data['num'], message)
         pass
 
 
@@ -73,7 +84,8 @@ def unsubscribe(data):
     This function will check and unscubscribe the user's data
     """
     # Slice the text format: TYPE<space>CITY<space>NAME
-    location = Location.objects.filter(code=data['text'][1])
+    city = data['text'][1]
+    location = location_list(city)
     subscriber = Subscriber.objects.filter(phone=data['num'])
 
     if subscriber.exists() and data['text'][1] == 'ALL':
@@ -120,3 +132,13 @@ def post_message(data):
         post_to_twitter(data['text'][0])
         post_to_facebook(data['text'][0])
 
+
+def info(data):
+    """
+    Sends SMS message to subscriber regarding 
+    weather info on their subscribed city/cities
+    """
+    city = data['text'][1]
+    location = location_list(city)
+    # http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
+    weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/currenthurricane/view.json"
