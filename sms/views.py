@@ -13,7 +13,6 @@ from sms.models import Message
 # Utils
 from sms.utils import send_sms, post_to_twitter, post_to_facebook, invalid_city_message, realtime_post
 
-
 # KEYWORDS *note: value should be unicode
 KEYWORD = {
     'subscribe'  : u'SUB',
@@ -43,9 +42,9 @@ def inbound_sms(request):
         elif KEYWORD['info'] == content['text'][0]:
             info(content)
         else:
-            pass
+            return HttpResponse('INBOUND OK')
             # TO-DO: Send sms to user that their sms format is invalid
-        return HttpResponse()
+        return HttpResponse('INBOUND ERROR!')
     else:
         return redirect('index')
 
@@ -72,11 +71,12 @@ def subscribe(data):
                 subscriber.name = name
         subscriber.location.add(location[0])
         subscriber.save()
+        return HttpResponse('SUBSCRIBE OK - User subscribed to %s' % location[0])
     else:
         # Send SMS to the user that the CITY is not valid
         message = invalid_city_message(city)
         # send_sms(data['num'], message)
-        pass
+        return HttpResponse('SUBSCRIBE ERROR - Invalid city: %s' % data['text'][1])
 
 
 def unsubscribe(data):
@@ -93,17 +93,19 @@ def unsubscribe(data):
         subscriber.location.clear()
         # TO-DO: confirmation reply that user is not subscribed
         # to any cities anymore
+        return HttpResponse("UNSUBSCRIBE OK - User unsubscribed to all cities")
     if location.exists() and subscriber.exists():
         subscriber = subscriber[0]
         if location[0] in subscriber.location.all():
             subscriber.location.remove(location[0])
             subscriber.save()
+            return HttpResponse('UNSUBSCRIBE OK - User unsubscribed to %s' % location[0])
         else:
             # user is not subscribed to the city
-            pass
+            return HttpResponse('UNSUBSCRIBE ERROR - User not subscribed to the city')
     else:
         # location and user does not exist: do something
-        pass
+        return HttpResponse('UNSUBSCRIBE ERROR - Subscriber and location does not exist')
 
 
 def post_message(data):

@@ -60,6 +60,12 @@ class InboundSMSTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(True, True)
 
+    def test_user_subscribe_existing_city_subscription(self):
+        """
+        User subscribes again for a city already subscribed
+        """
+        pass
+
     def test_user_subscribe_valid_city_no_name(self):
         """
         A user will subscribe to a single city
