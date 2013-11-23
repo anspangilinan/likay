@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet-0.7/leaflet.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/index.css">
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(event) {
+            var map = L.map('map').setView([51.505, -0.09], 13);
+
+        });
+    </script>
+{% endblock extra_js %}
+
+{% block main_content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="input-group input-group-md">
+                <span class="input-group-addon">Filter by city</span>
+                <select class="form-control" name="city-filter">
+                    <option>Davao</option>
+                    <option>Davao</option>
+                    <option>Davao</option>
+                    <option>Davao</option>
+                    <option>Davao</option>
+                </select>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div id="map">
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}
+
+{% block right_content %}
+    <ul class="list-group">
+        <li class="list-group-item">
+            <span class="badge">May 15</span>
+            Thanks Likay! Was able to avoid the ambon.
+        </li>
+        <li class="list-group-item">
+            <span class="badge">May 15</span>
+            Good thing I subscribed to Likay you know, Was able to iwas the flood.
+        </li>
+        <li class="list-group-item">
+            <span class="badge">May 14</span>
+            Likay saved my car, they were able to inform me the information I needed, thus I was informed.
+        </li>
+    </ul>
+{% endblock right_content %}
+
+{% block bottom_content %}
+    <div class="row">
+    </div>
+    <div class="row">
+        <div class="col-9 col-sm-9 col-lg-6">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+        </div>
+        <div class="col-9 col-sm-9 col-lg-6">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+        </div>
+    </div>
+{% endblock bottom_content %}

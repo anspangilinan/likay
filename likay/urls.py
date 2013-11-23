@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'likay.views.home', name='home'),
+    url(r'^$', 'likay.views.index', name='index'),
     # url(r'^likay/', include('likay.foo.urls')),
     url(r'^sms/', include('sms.urls')),
 
