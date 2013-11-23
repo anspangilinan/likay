@@ -1,6 +1,7 @@
 # Python Imports
 import json
 import requests
+from twitter import TwitterError
 
 # Django Imports
 from django.db.models import Q
@@ -134,19 +135,26 @@ def post_message(data):
         subscriber = Subscriber.objects.get(phone=str(data['num']))
     except IndexError, e:
         # Error: Send error message
-        pass
+        return HttpResponse(content='MSG ERROR',
+                            status=400)
     except Subscriber.DoesNotExist, e:
         # Error: Send error message
-        pass
+        return HttpResponse(content='MSG ERROR - Subscriber does not exist',
+                            status=400)
     else:
         # Save Message
         message = Message.objects.create(content=message,
                                          subscriber=subscriber)
         message.save()
         # Add Facebook and twitter post here
-        post_to_twitter(data['text'])
-        # post_to_facebook(data['text'])
+        try:
+            post_to_twitter(data['text'])
+        except TwitterError, t:
+            # Duplicate tweets error
+            pass
+        post_to_facebook(data['text'])
         realtime_post(data['text'])
+        return HttpResponse("MSG OK - MESSAGE SENT!")
 
 
 def info(data):
