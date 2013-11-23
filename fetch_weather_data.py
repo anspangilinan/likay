@@ -18,16 +18,16 @@ def fetch_weather_data():
 	hurricanes = response['currenthurricane']
 	#for development simulation
 	hurricanes = [{
-	 'forecast': [{
-	 	'lat': 7.0644,
-		'lon': 125.6078,
-		'WindSpeed': {
-			'Kph': 120,
-		},
-		'WindGust': {
-			'Kph': 120,
-		}
-	 }]
+	    'forecast': [{
+	 	    'lat': 7.0644,
+			'lon': 125.6078,
+			'WindSpeed': {
+			    'Kph': 120,
+			},
+			'WindGust': {
+				'Kph': 120,
+			}
+	 	}]
 	}]
 	
 	for hurricane in hurricanes:
@@ -40,7 +40,7 @@ def fetch_weather_data():
 			wind_speed = current_forecast['WindSpeed']['Kph']
 			wind_gust = current_forecast['WindGust']['Kph']
 
-			sms_message = """%s has been issued on %s""" % (compare_storm_signals(wind_speed), nearby_location.name)
+			sms_message = """%s Weather Advisory: %s""" % (nearby_location.name, compare_storm_signals(wind_speed))
 			subscribers = Subscriber.objects.filter(location__name__iexact=nearby_location.name)
 
 			for subscriber in subscribers:
@@ -51,13 +51,13 @@ def fetch_weather_data():
 
 def compare_storm_signals(wind_speed):
 	if wind_speed > 30 and wind_speed <=60:
-		return 'Storm Signal No. 1.'
+		return 'StormSignal#1-Listen to the latest severe weather bulletin issued by PAGASA'
 	elif wind_speed > 60 and wind_speed <=100:
-		return 'Storm Signal No. 2'
+		return 'StormSignal#2-People traveling by sea and air take caution;Secure properties'
 	elif wind_speed > 100 and wind_speed <=185:
-		return 'Storm Signal No. 3'
+		return 'StormSignal#3-Air/Sea travel very risky;Sseek shelter in strong buildings;Evacuate low-lying areas;Stay away from the coasts/riverbanks'
 	elif wind_speed > 185:
-		return 'Storm Signal No. 4'
+		return 'StormSignal#4-Situation potentially very destructive to community;Cancel all travels/outdoor activities;Evacuate now'
 
 
 def get_nearby_location(latitude, longitude):
