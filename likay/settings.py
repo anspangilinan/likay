@@ -162,3 +162,21 @@ LOGGING = {
         },
     }
 }
+######################
+# YOUPHORIC SETTINGS #
+######################
+YOUPHORIC_TEST_MODE = True
+
+# The YouPhoric account ID which requires credits to do outbound messages
+ACCOUNT_ID = ''
+
+# The user will send messages to this number (exclusive for SMART subscribers)
+ACCESS_CODE = '' 
+
+# Add 'accountId', 'msisdn', and 'text' as GET parameters in this URL to send an outbound message
+OUTBOUND_URL = 'http://121.58.235.158/angelhack/smsout.php'
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
