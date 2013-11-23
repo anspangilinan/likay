@@ -94,9 +94,8 @@ def post_message(data):
     - Twitter
     """
     # Slice the text format: TYPE<space>CITY<space>NAME
-    content = get_text_content(data)
     try:
-        message = content[1]
+        message = data['text'][1]
         subscriber = Subscriber.objects.get(phone=str(data['from'][0]))
     except IndexError, e:
         # Error: Send error message
@@ -110,6 +109,6 @@ def post_message(data):
                                          subscriber=subscriber)
         message.save()
         # Add Facebook and twitter post here
-        #post_to_twitter(data['text'][0])
+        post_to_twitter(data['text'][0])
         post_to_facebook(data['text'][0])
 
