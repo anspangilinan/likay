@@ -33,12 +33,13 @@ def get_nearby_location(latitude, longitude):
 	from core.models import Location
 	location_query = "http://api.geonames.org/findNearbyPlaceNameJSON?lat=%f&lng=%f&username=ferower" % (latitude, longitude)
 	response = json.loads(requests.get(location_query).content)
-	place_names = response['geonames']
-	if len(place_names) > 0:
-		place_name = place_names[0]['toponymName']
-		match_location = Location.objects.filter(name__iexact=place_name)
-		if match_location.count() > 0:
-			return match_location[0]
+	if response.has_key('geonames'):
+		place_names = response['geonames']
+		if len(place_names) > 0:
+			place_name = place_names[0]['toponymName']
+			match_location = Location.objects.filter(name__iexact=place_name)
+			if match_location.count() > 0:
+				return match_location[0]
 	return False
 
 
