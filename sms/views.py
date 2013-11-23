@@ -9,7 +9,7 @@ from core.models import Location
 from sms.models import Message
 
 # Utils
-from sms.utils import post_to_twitter
+from sms.utils import post_to_twitter, post_to_facebook
 
 
 # KEYWORDS *note: value should be unicode
@@ -29,7 +29,7 @@ def sms(request):
     This view will catch the user's sms through a GET request from youphoric server.
     """
     if request.method == "GET":
-        data = {u'svc_id': [u'0'], u'rrn': [u'410063049575'], u'from': [u'639998419831'], u'text': [u'SUB DVO earvin'], u'smsc': [u'strikerS6800in1ngin'], u'to': [u'68002'], u'utime': [u'1385197906']}
+        data = {u'svc_id': [u'0'], u'rrn': [u'410063049575'], u'from': [u'639998419831'], u'text': [u'MSG Wala pa niabot ang mga relief goods sa among baryo.'], u'smsc': [u'strikerS6800in1ngin'], u'to': [u'68002'], u'utime': [u'1385197906']}
 
         # Slice the text format: TYPE<space>CITY<space>NAME
         content = get_text_content(data)
@@ -41,7 +41,7 @@ def sms(request):
             print "unsubscribe"
             unsubscribe(data)
         elif KEYWORD['message'] == content[0]:
-            message(data)
+            post_message(data)
         else:
             pass
             # Will send sms to user that their sms format is invalid
@@ -93,17 +93,22 @@ def post_message(data):
     - Twitter
     """
     # Slice the text format: TYPE<space>CITY<space>NAME
-    content = split_content(data)
+    content = get_text_content(data)
     try:
         message = content[1]
         subscriber = Subscriber.objects.get(phone=str(data['from'][0]))
     except IndexError, e:
     	# Error: Send error message
     	pass
+    except Subscriber.DoesNotExist, e:
+        # Error: Send error message
+        pass
+
     else:
     	# Save Message
         message = Message.objects.create(content=message,
 										 subscriber=subscriber)
     	message.save()
     	# Add Facebook and twitter post here
-    	post_to_twitter(message)
+    	#post_to_twitter(data['text'][0])
+        post_to_facebook(data['text'][0])

@@ -67,7 +67,6 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'fandjango.middleware.FacebookMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -165,7 +164,7 @@ FACEBOOK_APPLICATION_SECRET_KEY = '214e4cb484c28c35f18a70a3d735999b'
 FACEBOOK_APPLICATION_NAMESPACE = 'likayph'
 
 FACEBOOK_PAGE_ID = '248804028611316'
-POST_ACCESS_TOKEN = 'CAACk2tC9zBYBAAp9rHe3ZAvBNqLf4J5E4kyvaozq1Cy8CcZCZBZBeEKP704eGmLwQvWNsEBZBhEHrIGgdLXJlV14jAJlEWQohRZABWfBNEgC5r5NL7njSRJHfn1cWLFRfRVGhj9gGNq0Jdbnciw4x5yu1qvWplYvzXJwzviZCmCzbRGFrwyyJxlGjYqZA3GLbK9JYGIgAgLvjQZDZD'
+POST_ACCESS_TOKEN = 'CAACk2tC9zBYBAH5gPPw1OZCBj2BeOYGQiuqdh9tKrd1VwAMRDKGWn4wmV1lhr7ZCZBKE1jQL3GeZBPmZBT0qDU1Jm6zTVOTgzRowrqZAXwIx3uRer2e7tUoIE4QRZBMBJstD2X2y9ykVlW8jkUFgQlikrNAJudaB98i1JKbVbZCaI9ukvj4sD6MHc2dgLMAbraejIbtsID25ugZDZD'
 
 ######################
 # YOUPHORIC SETTINGS #

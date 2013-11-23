@@ -1,5 +1,6 @@
 import requests
 import twitter
+import facebook
 
 from django.conf import settings
 
@@ -32,3 +33,20 @@ def post_to_twitter(message):
     # Tweets are limited to 140
     message = "%s... http://likay.ingenuity.ph" % (message[:109])
     status = api.PostUpdate(message)
+
+
+def post_to_facebook(message):
+    """
+    This will automatically post to facebook as likayph
+    """
+    access_token = settings.POST_ACCESS_TOKEN
+
+    facebook_graph = facebook.GraphAPI(access_token)    
+    attach = {
+        'name':'Likay Shout Out',
+        'link':'likay.ingenuity.ph',
+        'caption':'MSG<space>YOUR MESSAGE',
+        'description': message,
+    }
+
+    response = facebook_graph.put_wall_post('', attachment=attach, profile_id=settings.FACEBOOK_PAGE_ID)

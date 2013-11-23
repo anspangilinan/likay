@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from accounts.models import Subscriber
 from core.models import Location, Status
@@ -17,7 +19,7 @@ class Message(models.Model):
     """
     content       = models.TextField(**_optional_kwargs)
     location      = models.OneToOneField(Location, **_optional_kwargs)
-    subscriber    = models.OneToOneField(Subscriber, **_optional_kwargs)
+    subscriber    = models.ForeignKey(Subscriber, **_optional_kwargs)
     date_received = models.DateTimeField(**_optional_kwargs)
 
     def __unicode__(self):
