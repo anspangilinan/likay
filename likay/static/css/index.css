@@ -1,0 +1,8 @@
+#map { 
+    height: 480px; 
+}
+
+.input-group-addon {
+    background-color: #3498db;
+    color: #FFF;
+}

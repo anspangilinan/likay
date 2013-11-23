@@ -1,0 +1,21 @@
+body {
+    background: #FEFEFE;
+}
+.navbar {
+    background: #3498db;
+    color: #FFF;
+}
+
+.navbar a {
+    color: #FFF;
+    font-size: 24px;
+    font-weight: bolder;
+    letter-spacing: 4px;
+}
+
+.main-content {
+    margin-top: 50px;
+    padding: 40px;
+    color: #292929;
+    background: #FFFFFF;
+}
