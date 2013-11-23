@@ -8,6 +8,7 @@ _optional_kwargs = {
 
 class Location(models.Model):
     name = models.CharField(max_length = 255, **_optional_kwargs)
+    code = models.CharField(max_length = 25, **_optional_kwargs)
 
 class Status(models.Model):
     """
