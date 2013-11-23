@@ -38,6 +38,8 @@ def inbound_sms(request):
         elif KEYWORD['unsubscribe'] == content['text'][0]:
             unsubscribe(content)
         elif KEYWORD['message'] == content['text'][0]:
+            message = request.GET.get('text').replace(KEYWORD['message'] + ' ', '')
+            content['text'] = message
             post_message(content)
         elif KEYWORD['info'] == content['text'][0]:
             info(content)
@@ -131,8 +133,8 @@ def post_message(data):
                                          subscriber=subscriber)
         message.save()
         # Add Facebook and twitter post here
-        post_to_twitter(data['text'])
-        post_to_facebook(data['text'])
+        # post_to_twitter(data['text'])
+        # post_to_facebook(data['text'])
         realtime_post(data['text'])
 
 

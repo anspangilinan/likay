@@ -1,13 +1,7 @@
-
-// Enable pusher logging - don't include this in production
-Pusher.log = function(message) {
-  if (window.console && window.console.log) {
-    window.console.log(message);
-  }
-};
-
 var pusher = new Pusher('4a1b121857529e74584b');
 var channel = pusher.subscribe('message_channel');
-channel.bind('new_message', function(data) {
-  alert(data.message);
+channel.bind('new_post', function(data) {
+  var $el = $('<li class="list-group-item"><span class="badge">now</span>' + data.message + '</li>');
+
+  $el.insertAfter(($('.list-group').children('li')[0]))
 });
