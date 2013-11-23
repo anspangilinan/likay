@@ -1,6 +1,7 @@
 import requests
 import twitter
 import facebook
+import pusher
 
 from django.conf import settings
 
@@ -20,6 +21,7 @@ def send_sms(number, message):
         'msisdn': number,
         'text': message
     }
+
 
     if not settings.YOUPHORIC_TEST_MODE:
         send_sms = requests.get(settings.OUTBOUND_URL,
@@ -83,3 +85,12 @@ def invalid_city_message(city):
                 else:
                     message += '- %s' % suggested_location.name
     return message
+
+
+def realtime_post(message):
+    p = pusher.Pusher(
+      app_id='60123',
+      key='4a1b121857529e74584b',
+      secret='664908558ecf9f1d5027'
+    )
+    p['message_channel'].trigger('new_post', {'message': message})
