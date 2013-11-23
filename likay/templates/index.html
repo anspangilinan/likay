@@ -18,15 +18,15 @@
                 map.setView([lat, lng], zoom);
 
                 if( selectedCity != "" ) {
-                    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                        attribution: 'Hi'
+                    L.tileLayer(null , {
+                        attribution: selectedCity
                     }).addTo(map);
                 }
 
                 $("a[title='A JS library for interactive maps'").remove();
             };
 
-            renderMap(11.6722,122.9627,"Philippines", 5);
+            renderMap(11.6722, 122.9627, "Philippines", 5);
 
             $("select[name='city-filter']").change(function(event) {
                 var $selected = $(this).find(":selected"),
@@ -66,23 +66,20 @@
 
 {% block right_content %}
     <ul class="list-group">
-        <li class="list-group-item active">
-            <strong>Feeds</strong>
-        </li>
+        <h4>Feeds</h4>
         {% for message in messages %}
             <li class="list-group-item">
-                <span class="badge">{{ message.date_received }}</span>
+                <span class="badge">{{ message.date_received|date:"M-d" }}</span>
                 {{ message.content }}
+                <br />
+                <small class="muted">
+                    {% if message.subscriber.name %}
+                    {{ message.subscriber.name|title }}, 
+                    {% endif %}
+                    {{ message.subscriber.phone }}
+                </small>
             </li>
         {% endfor %}
-<!--         <li class="list-group-item">
-            <span class="badge">May 15</span>
-            Good thing I subscribed to Likay you know, Was able to iwas the flood.
-        </li>
-        <li class="list-group-item">
-            <span class="badge">May 14</span>
-            Likay saved my car, they were able to inform me the information I needed, thus I was informed.
-        </li> -->
     </ul>
 {% endblock right_content %}
 
