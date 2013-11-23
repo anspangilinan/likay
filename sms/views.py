@@ -10,7 +10,7 @@ from core.models import Location
 from sms.models import Message
 
 # Utils
-from sms.utils import post_to_twitter, post_to_facebook
+from sms.utils import post_to_twitter, post_to_facebook, realtime_post
 
 
 # KEYWORDS *note: value should be unicode
@@ -103,8 +103,8 @@ def post_message(data):
     """
     # Slice the text format: TYPE<space>CITY<space>NAME
     try:
-        message = data['text'][1]
-        subscriber = Subscriber.objects.get(phone=str(data['from'][0]))
+        message = data['text']
+        subscriber = Subscriber.objects.get(phone=str(data['num']))
     except IndexError, e:
         # Error: Send error message
         pass
@@ -117,6 +117,7 @@ def post_message(data):
                                          subscriber=subscriber)
         message.save()
         # Add Facebook and twitter post here
-        post_to_twitter(data['text'][0])
-        post_to_facebook(data['text'][0])
+        post_to_twitter(data['text'])
+        post_to_facebook(data['text'])
+        realtime_post(data['text'])
 

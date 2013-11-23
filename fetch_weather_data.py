@@ -11,7 +11,8 @@ import json
 # - Signal no. 4 - 185kph up
 
 def fetch_weather_data():
-	# http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
+	from accounts.models import Subscriber
+	from sms.utils import send_sms
 	weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/currenthurricane/view.json"
 	response = json.loads(requests.get(weather_query).content)
 	hurricanes = response['currenthurricane']
@@ -21,6 +22,9 @@ def fetch_weather_data():
 	 	'lat': 7.0644,
 		'lon': 125.6078,
 		'WindSpeed': {
+			'Kph': 120,
+		},
+		'WindGust': {
 			'Kph': 120,
 		}
 	 }]
@@ -34,9 +38,13 @@ def fetch_weather_data():
 		nearby_location = get_nearby_location(latitude, longitude)
 		if (nearby_location):
 			wind_speed = current_forecast['WindSpeed']['Kph']
-			
-			print "send sms to " + nearby_location.name + " " + compare_storm_signals(wind_speed)
-			# send_sms(nearby_location)
+			wind_gust = current_forecast['WindGust']['Kph']
+
+			sms_message = """%s has been issued on %s with a wind speed of %f Kph and a wind gust of %f Kph.""" % (compare_storm_signals(wind_speed), nearby_location.name, wind_speed, wind_gust)
+			subscribers = Subscriber.objects.filter(location__name__iexact=nearby_location.name)
+
+			for subscriber in subscribers:
+				send_sms(subscriber.phone, sms_message)
 
 	return 'success'
 

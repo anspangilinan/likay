@@ -8,6 +8,8 @@
 {% block extra_js %}
     <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
+    <script type="text/javascript" src="http://js.pusher.com/2.1/pusher.min.js" ></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/pusher-main.js"></script>
     <script type="text/javascript">
         $(document).ready(function(event) {
             var map = L.map('map',{}),

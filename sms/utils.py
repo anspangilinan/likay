@@ -1,6 +1,7 @@
 import requests
 import twitter
 import facebook
+import pusher
 
 from django.conf import settings
 
@@ -18,6 +19,9 @@ def send_sms(number, message):
         'msisdn': number,
         'text': message
     }
+
+    import pdb
+    pdb.set_trace()
 
     if not settings.YOUPHORIC_TEST_MODE:
         send_sms = requests.get(settings.OUTBOUND_URL,
@@ -50,3 +54,12 @@ def post_to_facebook(message):
     }
 
     response = facebook_graph.put_wall_post('', attachment=attach, profile_id=settings.FACEBOOK_PAGE_ID)
+
+
+def realtime_post(message):
+    p = pusher.Pusher(
+      app_id='60123',
+      key='4a1b121857529e74584b',
+      secret='664908558ecf9f1d5027'
+    )
+    p['message_channel'].trigger('new_post', {'message': message})
