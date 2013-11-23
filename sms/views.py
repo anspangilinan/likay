@@ -1,4 +1,6 @@
 # Python Imports
+import json
+import requests
 
 # Django Imports
 from django.db.models import Q
@@ -152,7 +154,25 @@ def info(data):
     Sends SMS message to subscriber regarding 
     weather info on their subscribed city/cities
     """
-    city = data['text'][1]
-    location = location_list(city)
-    # http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
-    weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/currenthurricane/view.json"
+    try:
+        num = str(data['num'])
+        print num
+        subscriber = Subscriber.objects.get(phone=num)
+        print subscriber
+        # http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
+        locations = subscriber.location.all()
+        # Send messages for all locations of subscriber
+        message = ''
+        for location in locations:
+            weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/%s.json" % location.name.lower()
+            response = json.loads(requests.get(weather_query).content)
+            observation = response['current_observation']
+            message = "WeatherInfo: %s; %s; %s" % (observation['display_location']['city'], 
+                                                   observation['weather'],
+                                                   observation['temperature_string'])
+            #send_sms(num, message)
+        return HttpResponse('INFO OK')
+    except Subscriber.DoesNotExist, e:
+        # Error: send error message
+        return HttpResponse(content='INFO ERROR - You need to subscribe',
+                            status=400)
