@@ -49,7 +49,7 @@ def post_to_facebook(message):
     attach = {
         'name':'Likay Shout Out',
         'link':'likay.ingenuity.ph',
-        'caption':'MSG<space>YOUR MESSAGE',
+        'caption':'MSG<space>YOUR MESSAGE and send to 68002',
         'description': message,
     }
 
