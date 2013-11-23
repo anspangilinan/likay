@@ -41,7 +41,7 @@ class InboundSMSTest(TestCase):
         self.test_location = Location.objects.create(name='Davao',
                                                      code='DVO')
         self.test_user = Subscriber.objects.create(name='Test Name',
-                                                   phone='639177169495')
+                                                   phone=self.num)
     def test_user_subscribe_valid_city_no_name(self):
         """
         A user will subscribe to a single city
@@ -128,11 +128,21 @@ class InboundSMSTest(TestCase):
         url = self.url + urllib.urlencode(test_get)
         response = self.client.get(url)
         self.assertEqual(True, True)
-
-
+        # TO-DO: improve this
 
     def test_user_unsubscribe_all(self):
-        pass
+        """
+        Existing user unsubscribes to all cities
+        (regardless if user is subscribed to a city or not)
+        """
+        test_get = {
+            'from': self.num,
+            'text': 'UNSUB ALL'
+        }
+        url = self.url + urllib.urlencode(test_get)
+        response = self.client.get(url)
+        no_subscribed_cities = not self.test_user.location.all()
+        self.assertEqual(no_subscribed_cities, True)
 
     def test_user_invalid_text_format(self):
         pass

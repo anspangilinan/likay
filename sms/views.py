@@ -73,6 +73,11 @@ def unsubscribe(data):
     location = Location.objects.filter(code=data['text'][1])
     subscriber = Subscriber.objects.filter(phone=data['num'])
 
+    if subscriber.exists() and data['text'][1] == 'ALL':
+        subscriber = subscriber[0]
+        subscriber.location.clear()
+        # TO-DO: confirmation reply that user is not subscribed
+        # to any cities anymore
     if location.exists() and subscriber.exists():
         subscriber = subscriber[0]
         if location[0] in subscriber.location.all():
