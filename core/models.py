@@ -1,3 +1,16 @@
 from django.db import models
 
-# Create your models here.
+
+_optional_kwargs = {
+    'null': True,
+    'blank': True
+}
+
+class Location(models.Model):
+    name = models.CharField(max_length = 255, **_optional_kwargs)
+
+class Status(models.Model):
+    """
+    Status of the weather; Parsed from the Weather API;
+    """
+    name = models.CharField(max_length = 255, **_optional_kwargs)
