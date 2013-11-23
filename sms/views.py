@@ -1,7 +1,7 @@
 # Python Imports
 
 # Django Imports
-from django.http import HttpResponseNotModified
+from django.http import HttpResponse
 from django.shortcuts import redirect
 
 # Models
@@ -41,7 +41,7 @@ def inbound_sms(request):
         else:
             pass
             # TO-DO: Send sms to user that their sms format is invalid
-        return HttpResponseNotModified()
+        return HttpResponse()
     else:
         return redirect('index')
 
