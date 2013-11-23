@@ -1,0 +1,103 @@
+[
+{
+  "pk": 1, 
+  "model": "core.location", 
+  "fields": {
+    "code": "CBU", 
+    "name": "Cebu",
+    "latitude": "10.3537",
+    "longitude": "123.8477"
+  }
+},
+{
+  "pk": 2, 
+  "model": "core.location", 
+  "fields": {
+    "code": "DVO", 
+    "name": "Davao",
+    "latitude": "7.2517",
+    "longitude": "125.4270"
+
+  }
+},
+{
+  "pk": 3, 
+  "model": "core.location", 
+  "fields": {
+    "code": "MLA", 
+    "name": "Manila",
+    "latitude": "14.6085",
+    "longitude": "120.9679"
+  }
+},
+{
+  "pk": 4, 
+  "model": "core.location", 
+  "fields": {
+    "code": "QZT", 
+    "name": "Quezon",
+    "latitude": "14.6760",
+    "longitude": "121.0437 "
+  }
+},
+{
+  "pk": 5, 
+  "model": "core.location", 
+  "fields": {
+    "code": "BOR", 
+    "name": "Boracay",
+    "latitude": "11.9634",
+    "longitude": "121.9265"
+  }
+},
+{
+  "pk": 6, 
+  "model": "core.location", 
+  "fields": {
+    "code": "LEY", 
+    "name": "Leyte",
+    "latitude": "11.3667",
+    "longitude": "124.4833"
+  }
+},
+{
+  "pk": 7, 
+  "model": "core.location", 
+  "fields": {
+    "code": "TAG", 
+    "name": "Bohol",
+    "latitude": "9.7922",
+    "longitude": "124.1506"
+  }
+},
+{
+  "pk": 8, 
+  "model": "core.location", 
+  "fields": {
+    "code": "CBO", 
+    "name": "Cotabato",
+    "latitude": "7.2167",
+    "longitude": "124.2500"
+  }
+},
+{
+  "pk": 9, 
+  "model": "core.location", 
+  "fields": {
+    "code": "JOL", 
+    "name": "Jolo",
+    "latitude": "5.9692",
+    "longitude": "121.1252"
+  }
+},
+{
+  "pk": 10, 
+  "model": "core.location", 
+  "fields": {
+    "code": "NAV", 
+    "name": "Navotas",
+    "latitude": "14.6715",
+    "longitude": "120.9398"
+  }
+}
+]

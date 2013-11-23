@@ -1,11 +1,11 @@
 from django.db import models
 from core.models import Location
 
-
 _optional_kwargs = {
     'null': True,
     'blank': True
 }
+
 
 class Subscriber(models.Model):
     """

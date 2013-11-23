@@ -181,6 +181,14 @@ ACCESS_CODE = ''
 # Add 'accountId', 'msisdn', and 'text' as GET parameters in this URL to send an outbound message
 OUTBOUND_URL = 'http://121.58.235.158/angelhack/smsout.php'
 
+###########################
+# TWITTER KEYS AND TOKENS #
+###########################
+TWITTER_CONSUMER_KEY = '9cqozV0HpETI89dIEvyLTA'
+TWITTER_CONSUMER_SECRET = 'o3ov3PRSUhWvrN6N7cHbG1o3VSivsfv3bH6BEW6nnM'
+TWITTER_ACCESS_TOKEN ='2210852508-wneJzBPPzv7LOjEnkIZzwBUZLq571Yolug5wl5q'
+TWITTER_ACCESS_TOKEN_SECRET = '7yeB7GyZ7aTGP6OLMeTSRzqE3Vcu5kIOiIxi1jZ3nJmZf'
+
 try:
     from local_settings import *
 except ImportError:

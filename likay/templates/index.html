@@ -6,12 +6,35 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
     <script type="text/javascript">
         $(document).ready(function(event) {
-            var map = L.map('map').setView([51.505, -0.09], 13);
+            var map = L.map('map',{}),
+                renderMap = function(lat, lng, selectedCity, zoom) {
+                // create a map in the "map" div, set the view to a given place and zoom
+                map.setView([lat, lng], zoom);
 
+                if( selectedCity != "" ) {
+                    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                        attribution: 'Hi'
+                    }).addTo(map);
+                }
+
+                $("a[title='A JS library for interactive maps'").remove();
+            };
+
+            renderMap(11.6722,122.9627,"Philippines", 5);
+
+            $("select[name='city-filter']").change(function(event) {
+                var $selected = $(this).find(":selected"),
+                    code = $selected.data('code'),
+                    name = $selected.data('name'),
+                    latitude = $selected.data('latitude'),
+                    longitude = $selected.data('longitude');
+                
+                renderMap(latitude, longitude, name, 8.3);
+            });
         });
     </script>
 {% endblock extra_js %}
@@ -22,11 +45,13 @@
             <div class="input-group input-group-md">
                 <span class="input-group-addon">Filter by city</span>
                 <select class="form-control" name="city-filter">
-                    <option>Davao</option>
-                    <option>Davao</option>
-                    <option>Davao</option>
-                    <option>Davao</option>
-                    <option>Davao</option>
+                    <option>no filter</option>
+                    {% for city in cities %}
+                    <option data-code="{{ city.code }}" data-name="{{ city.name }}"
+                            data-latitude="{{ city.latitude }}" data-longitude="{{ city.longitude }}">
+                        {{ city.name }}
+                    </option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -39,8 +64,11 @@
 
 {% block right_content %}
     <ul class="list-group">
+        <li class="list-group-item active">
+            Cras justo odio
+        </li>
         <li class="list-group-item">
-            <span class="badge">May 15</span>
+            <span class="badge">May 16</span>
             Thanks Likay! Was able to avoid the ambon.
         </li>
         <li class="list-group-item">

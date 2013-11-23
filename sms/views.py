@@ -8,6 +8,9 @@ from accounts.models import Subscriber
 from core.models import Location
 from sms.models import Message
 
+# Utils
+from sms.utils import post_to_twitter
+
 
 # KEYWORDS *note: value should be unicode
 KEYWORD = {
@@ -20,7 +23,6 @@ KEYWORD = {
 def get_text_content(data):
     content = data['text'][0].split(' ')
     return content
-
 
 def sms(request):
     """
@@ -104,3 +106,4 @@ def post_message(data):
 										 subscriber=subscriber)
     	message.save()
     	# Add Facebook and twitter post here
+    	post_to_twitter(message)

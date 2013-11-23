@@ -7,11 +7,13 @@ _optional_kwargs = {
 }
 
 class Location(models.Model):
-    name = models.CharField(max_length = 255, **_optional_kwargs)
-    code = models.CharField(max_length = 25, **_optional_kwargs)
+    name      = models.CharField(max_length = 255, **_optional_kwargs)
+    code      = models.CharField(max_length = 25, **_optional_kwargs)
+    latitude  = models.CharField(max_length = 255, **_optional_kwargs)
+    longitude = models.CharField(max_length = 255, **_optional_kwargs)
 
     def __unicode__(self):
-    	return "%s" % self.name
+        return "%s" % self.name
 
 class Status(models.Model):
     """
