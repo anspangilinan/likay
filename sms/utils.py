@@ -1,8 +1,11 @@
 import requests
 import twitter
 import facebook
+import pusher
 
 from django.conf import settings
+
+from core.models import Location
 
 
 def send_sms(number, message):
@@ -18,6 +21,7 @@ def send_sms(number, message):
         'msisdn': number,
         'text': message
     }
+
 
     if not settings.YOUPHORIC_TEST_MODE:
         send_sms = requests.get(settings.OUTBOUND_URL,
@@ -50,3 +54,43 @@ def post_to_facebook(message):
     }
 
     response = facebook_graph.put_wall_post('', attachment=attach, profile_id=settings.FACEBOOK_PAGE_ID)
+
+
+def invalid_city_message(city):
+    """
+    Returns a string of list of suggested cities
+    depending on string `city`
+    """
+    # Send SMS to the user that the CITY is not valid
+    message = 'Invalid text format.<CITY> is not valid.'
+    # Get suggested cities with first 3 letters of the CITY
+    if len(city) == 3:
+        suggested_locations = Location.objects.filter(code__istartswith=city[:2])
+        if suggested_locations:
+            first = True
+            for suggested_location in suggested_locations:
+                if first:
+                    first = False
+                    message += ' Suggested City Codes: %s ' % suggested_location.code
+                else:
+                    message += '- %s' % suggested_location.code
+    else:
+        suggested_locations = Location.objects.filter(name__istartswith=city[:3])
+        if suggested_locations:
+            first = True
+            for suggested_location in suggested_locations:
+                if first:
+                    first = False
+                    message += ' Suggested City Name: %s ' % suggested_location.name
+                else:
+                    message += '- %s' % suggested_location.name
+    return message
+
+
+def realtime_post(message):
+    p = pusher.Pusher(
+      app_id='60123',
+      key='4a1b121857529e74584b',
+      secret='664908558ecf9f1d5027'
+    )
+    p['message_channel'].trigger('new_post', {'message': message})
