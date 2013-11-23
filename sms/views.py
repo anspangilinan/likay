@@ -133,7 +133,7 @@ def post_message(data):
                                          subscriber=subscriber)
         message.save()
         # Add Facebook and twitter post here
-        # post_to_twitter(data['text'])
+        post_to_twitter(data['text'])
         # post_to_facebook(data['text'])
         realtime_post(data['text'])
 

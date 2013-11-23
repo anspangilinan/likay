@@ -40,7 +40,7 @@ def fetch_weather_data():
 			wind_speed = current_forecast['WindSpeed']['Kph']
 			wind_gust = current_forecast['WindGust']['Kph']
 
-			sms_message = """%s has been issued on %s with a wind speed of %f Kph and a wind gust of %f Kph.""" % (compare_storm_signals(wind_speed), nearby_location.name, wind_speed, wind_gust)
+			sms_message = """%s has been issued on %s""" % (compare_storm_signals(wind_speed), nearby_location.name)
 			subscribers = Subscriber.objects.filter(location__name__iexact=nearby_location.name)
 
 			for subscriber in subscribers:
