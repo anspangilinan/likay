@@ -65,20 +65,22 @@
 {% block right_content %}
     <ul class="list-group">
         <li class="list-group-item active">
-            Cras justo odio
+            <strong>Feeds</strong>
         </li>
-        <li class="list-group-item">
-            <span class="badge">May 16</span>
-            Thanks Likay! Was able to avoid the ambon.
-        </li>
-        <li class="list-group-item">
+        {% for message in messages %}
+            <li class="list-group-item">
+                <span class="badge">{{ message.date_received }}</span>
+                {{ message.content }}
+            </li>
+        {% endfor %}
+<!--         <li class="list-group-item">
             <span class="badge">May 15</span>
             Good thing I subscribed to Likay you know, Was able to iwas the flood.
         </li>
         <li class="list-group-item">
             <span class="badge">May 14</span>
             Likay saved my car, they were able to inform me the information I needed, thus I was informed.
-        </li>
+        </li> -->
     </ul>
 {% endblock right_content %}
 
