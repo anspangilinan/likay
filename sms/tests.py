@@ -7,6 +7,7 @@ Replace this with more appropriate tests for your application.
 import urllib
 
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.test import TestCase
 from django.test.client import Client
 
@@ -42,6 +43,7 @@ class InboundSMSTest(TestCase):
                                                      code='DVO')
         self.test_user = Subscriber.objects.create(name='Test Name',
                                                    phone=self.num)
+        self.bad_request_code = 400
 
     def test_invalid_text_format(self):
         """
@@ -58,13 +60,23 @@ class InboundSMSTest(TestCase):
         }
         url = self.url + urllib.urlencode(test_get)
         response = self.client.get(url)
-        self.assertEqual(True, True)
+        self.assertEqual(response.status_code,
+                         self.bad_request_code)
 
     def test_user_subscribe_existing_city_subscription(self):
         """
         User subscribes again for a city already subscribed
         """
-        pass
+        self.test_user.location.add(self.test_location)
+        city = 'DVO'
+        test_get = {
+            'from': self.num,
+            'text': 'SUB %s' % city,
+        }
+        url = self.url + urllib.urlencode(test_get)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code,
+                         self.bad_request_code)
 
     def test_user_subscribe_valid_city_no_name(self):
         """
@@ -120,7 +132,10 @@ class InboundSMSTest(TestCase):
         response = self.client.get(url)
         user = Subscriber.objects.filter(phone=self.num,
                                          location__code=city)
+
         self.assertEqual(not user.exists(), True)
+        self.assertEqual(response.status_code,
+                         self.bad_request_code)
 
     def test_user_unsubscribe_valid_city(self):
         """
@@ -151,8 +166,8 @@ class InboundSMSTest(TestCase):
         }
         url = self.url + urllib.urlencode(test_get)
         response = self.client.get(url)
-        self.assertEqual(True, True)
-        # TO-DO: improve this
+        self.assertEqual(response.status_code,
+                         self.bad_request_code)
 
     def test_user_unsubscribe_all(self):
         """

@@ -34,19 +34,20 @@ def inbound_sms(request):
             'num': request.GET['from']
         }
         if KEYWORD['subscribe'] == content['text'][0]:
-            subscribe(content)
+            response = subscribe(content)
         elif KEYWORD['unsubscribe'] == content['text'][0]:
-            unsubscribe(content)
+            response = unsubscribe(content)
         elif KEYWORD['message'] == content['text'][0]:
             message = request.GET.get('text').replace(KEYWORD['message'] + ' ', '')
             content['text'] = message
-            post_message(content)
+            response = post_message(content)
         elif KEYWORD['info'] == content['text'][0]:
-            info(content)
+            response = info(content)
         else:
-            return HttpResponse('INBOUND OK')
+            return HttpResponse(content='INBOUND ERROR',
+                                status=400)
             # TO-DO: Send sms to user that their sms format is invalid
-        return HttpResponse('INBOUND ERROR!')
+        return response
     else:
         return redirect('index')
 
@@ -71,14 +72,20 @@ def subscribe(data):
             name = ' '.join(data['text'][2:])
             if name:
                 subscriber.name = name
-        subscriber.location.add(location[0])
-        subscriber.save()
+        if location[0] in subscriber.location.all():
+            return HttpResponse(content='SUBSCRIBE ERROR - Subscription to %s already exists' % location[0],
+                                status=400)
+            # TO-DO: reply to user that city subscription exists
+        else:
+            subscriber.location.add(location[0])
+            subscriber.save()
         return HttpResponse('SUBSCRIBE OK - User subscribed to %s' % location[0])
     else:
         # Send SMS to the user that the CITY is not valid
         message = invalid_city_message(city)
         # send_sms(data['num'], message)
-        return HttpResponse('SUBSCRIBE ERROR - Invalid city: %s' % data['text'][1])
+        return HttpResponse(content='SUBSCRIBE ERROR - Invalid city: %s' % data['text'][1],
+                            status=400)
 
 
 def unsubscribe(data):
@@ -104,10 +111,12 @@ def unsubscribe(data):
             return HttpResponse('UNSUBSCRIBE OK - User unsubscribed to %s' % location[0])
         else:
             # user is not subscribed to the city
-            return HttpResponse('UNSUBSCRIBE ERROR - User not subscribed to the city')
+            return HttpResponse(content='UNSUBSCRIBE ERROR - User not subscribed to the city',
+                                status=400)
     else:
         # location and user does not exist: do something
-        return HttpResponse('UNSUBSCRIBE ERROR - Subscriber and location does not exist')
+        return HttpResponse(content='UNSUBSCRIBE ERROR - Subscriber and location does not exist',
+                            status=400)
 
 
 def post_message(data):
