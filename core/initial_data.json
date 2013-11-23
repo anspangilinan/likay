@@ -1,0 +1,82 @@
+[
+{
+  "pk": 1, 
+  "model": "core.location", 
+  "fields": {
+    "code": "CBU", 
+    "name": "Cebu"
+  }
+},
+{
+  "pk": 2, 
+  "model": "core.location", 
+  "fields": {
+    "code": "DVO", 
+    "name": "Davao"
+  }
+},
+{
+  "pk": 3, 
+  "model": "core.location", 
+  "fields": {
+    "code": "MLA", 
+    "name": "Manila"
+  }
+},
+{
+  "pk": 4, 
+  "model": "core.location", 
+  "fields": {
+    "code": "QZT", 
+    "name": "Quezon"
+  }
+},
+{
+  "pk": 5, 
+  "model": "core.location", 
+  "fields": {
+    "code": "BOR", 
+    "name": "Boracay"
+  }
+},
+{
+  "pk": 6, 
+  "model": "core.location", 
+  "fields": {
+    "code": "LEY", 
+    "name": "Leyte"
+  }
+},
+{
+  "pk": 7, 
+  "model": "core.location", 
+  "fields": {
+    "code": "TAG", 
+    "name": "Bohol"
+  }
+},
+{
+  "pk": 8, 
+  "model": "core.location", 
+  "fields": {
+    "code": "CBO", 
+    "name": "Cotabato"
+  }
+},
+{
+  "pk": 9, 
+  "model": "core.location", 
+  "fields": {
+    "code": "JOL", 
+    "name": "Jolo"
+  }
+},
+{
+  "pk": 10, 
+  "model": "core.location", 
+  "fields": {
+    "code": "NAV", 
+    "name": "Navotas"
+  }
+}
+]

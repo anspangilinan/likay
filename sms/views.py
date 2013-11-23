@@ -14,6 +14,7 @@ KEYWORD = {
     'unsubscribe': u'UNSUB',
 }
 
+
 def sms(request):
     """
     This view will catch the user's sms through a GET request from youphoric server.
