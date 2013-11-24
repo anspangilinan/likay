@@ -18,7 +18,9 @@ class Subscriber(models.Model):
     location = models.ManyToManyField(Location, **_optional_kwargs)
 
     def __unicode__(self):
-        return "%s" % self.name
+        if self.name:
+            return "%s" % self.name
+        return "%s" % self.phone
 
 
 class Moderator(models.Model):
