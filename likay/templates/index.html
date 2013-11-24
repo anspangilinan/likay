@@ -1,44 +1,18 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet-0.7/leaflet.css">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+    <![endif]-->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/index.css">
 {% endblock extra_css %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
     <script type="text/javascript" src="http://js.pusher.com/2.1/pusher.min.js" ></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/pusher-main.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(event) {
-            var map = L.map('map',{}),
-                renderMap = function(lat, lng, selectedCity, zoom) {
-                // create a map in the "map" div, set the view to a given place and zoom
-                map.setView([lat, lng], zoom);
-
-                if( selectedCity != "" ) {
-                    L.tileLayer(null , {
-                        attribution: selectedCity
-                    }).addTo(map);
-                }
-
-                $("a[title='A JS library for interactive maps'").remove();
-            };
-
-            renderMap(11.6722, 122.9627, "Philippines", 5);
-
-            $("select[name='city-filter']").change(function(event) {
-                var $selected = $(this).find(":selected"),
-                    code = $selected.data('code'),
-                    name = $selected.data('name'),
-                    latitude = $selected.data('latitude'),
-                    longitude = $selected.data('longitude');
-                
-                renderMap(latitude, longitude, name, 8.3);
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/index-map.js"></script>
 {% endblock extra_js %}
 
 {% block main_content %}
@@ -50,7 +24,8 @@
                     <option>no filter</option>
                     {% for city in cities %}
                     <option data-code="{{ city.code }}" data-name="{{ city.name }}"
-                            data-latitude="{{ city.latitude }}" data-longitude="{{ city.longitude }}">
+                            data-latitude="{{ city.latitude }}" data-longitude="{{ city.longitude }}"
+                            data-weather-status="{{ city.weather_status }}">
                         {{ city.name }}
                     </option>
                     {% endfor %}
@@ -77,6 +52,9 @@
                     {{ message.subscriber.name|title }}, 
                     {% endif %}
                     {{ message.subscriber.phone }}
+                    {% if message.subscirber.location.name %}
+                    , {{ message.subscriber.location.name }}
+                    {% endif %}
                 </small>
             </li>
         {% endfor %}
@@ -87,15 +65,18 @@
     <div class="row">
     </div>
     <div class="row">
+        <h2><i class="glyphicon glyphicon-cloud glyphicon-lg"></i> Weather Info</h2>
+        {% for city in city_status %}
         <div class="col-9 col-sm-9 col-lg-6">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            <h4>{{ city.city|title }}</h4>
+            <p class="mute">
+            {{ city.subscribers }} Subscriber{{ city.subscribers|pluralize }}
+            </p>
+            <p>
+            {{ city.status|title }}
+            </p>
+            <hr />
         </div>
-        <div class="col-9 col-sm-9 col-lg-6">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-        </div>
+        {% endfor %}
     </div>
 {% endblock bottom_content %}

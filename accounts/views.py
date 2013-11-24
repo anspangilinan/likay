@@ -36,9 +36,8 @@ def send_sms(request, template_name="accounts/send_sms.html"):
 
 			for subscriber in subscribers:
 				send_sms(subscriber.phone, message.content)
-
-		return HttpResponseRedirect(reverse('send_sms'))			
-
+			ctx['success'] = True
+			form = MessageForm()
 	else:
 		form = MessageForm()
 

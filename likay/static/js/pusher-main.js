@@ -3,5 +3,5 @@ var channel = pusher.subscribe('message_channel');
 channel.bind('new_post', function(data) {
   var $el = $('<li class="list-group-item"><span class="badge">now</span>' + data.message + '</li>');
 
-  $el.insertAfter(($('.list-group').children('li')[0]))
+  $el.insertBefore(($('.list-group').children('li')[0]))
 });
