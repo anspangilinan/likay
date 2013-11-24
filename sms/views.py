@@ -158,7 +158,10 @@ def post_message(data):
         message = Message.objects.create(content=message,
                                          subscriber=subscriber)
         message.save()
-        message = "%s - %s" % (message.subscriber.location.all(), data['text'])
+        locations = message.subscriber.location.all()
+        message = data['text']
+        if locations:
+            message = "%s - %s" % (locations[0], data['text'])
         try:
             post_to_twitter(message)
         except TwitterError, t:
