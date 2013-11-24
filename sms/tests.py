@@ -182,3 +182,17 @@ class InboundSMSTest(TestCase):
         response = self.client.get(url)
         no_subscribed_cities = not self.test_user.location.all()
         self.assertEqual(no_subscribed_cities, True)
+
+    def test_group_sub(self):
+        """
+        An existing user sends a list of numbers separated by comma
+        and a city name. The numbers will be subscribed to weather updates
+        of the city specified
+        """
+        city = 'DVO'
+        test_get = {
+            'from': self.num,
+            'text': 'GRPSUB %s 639177169495,639177169495,639177169495' % city,
+        }
+        url = self.url + urllib.urlencode(test_get)
+        response = self.client.get(url)

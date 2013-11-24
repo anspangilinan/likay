@@ -23,6 +23,7 @@ KEYWORD = {
     'unsubscribe': u'UNSUB',
     'message'    : u'MSG',
     'info'       : u'INFO',
+    'groupsub'   : u'GRPSUB',
 }
 
 
@@ -64,6 +65,8 @@ def inbound_sms(request):
                 response = post_message(content)
             elif KEYWORD['info'] == content['text'][0]:
                 response = info(content)
+            elif KEYWORD['groupsub'] == content['text'][0]:
+                response = group_sub(content)
             else:
                 message = 'Invalid Text Format: Formats are the following - SUB <city> <name(optional)>; UNSUB <city>; UNSUB ALL; INFO; MSG <message>;'
                 send_sms(content['num'], message)
@@ -115,6 +118,46 @@ def subscribe(data):
         send_sms(data['num'], message)
         return HttpResponse(content='SUBSCRIBE ERROR - Invalid city: %s' % data['text'][1],
                             status=400)
+
+
+def group_sub(data):
+    """
+    This will subscribe all numbers sent by the user to the city
+    Example:
+    GRPSUB DVO 639177169495,639178234561,63923845581
+    """
+    # TO-DO: add HttpResponse with specific error codes
+    city = data['text'][1]
+    location = location_list(city)
+    subscriber = Subscriber.objects.filter(phone=data['num'])
+
+    if subscriber.exists():
+        if location.exists():
+            initiator_identifier = subscriber[0].name or subscriber[0].phone
+            loc = location[0]
+            success_msg = 'You were subscribed by %s for weather updates on the city of %s' % (initiator_identifier, loc)
+            numbers = data['text'][2:][0].split(',')
+            for num in numbers:
+                to_be_subscribed, created = Subscriber.objects.get_or_create(phone=data['num'])
+                if created:
+                    to_be_subscribed.location.add(loc)
+                    to_be_subscribed.save()
+                    send_sms(num, success_msg)
+                else:
+                    if loc not in to_be_subscribed.location.all():
+                        to_be_subscribed.location.add(loc)
+                        to_be_subscribed.save()
+                        send_sms(num, success_msg)
+        else:
+            # Invalid city
+            pass
+    else:
+        # Sender not a subscriber of Likay
+        pass
+
+    return HttpResponse('TEMPORARY RESPONSE')
+
+
 
 
 def unsubscribe(data):
