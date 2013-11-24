@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet-0.7/leaflet.css">
+    <!-- <link rel="stylesheet" href="{{ STATIC_URL }}leaflet-0.7/leaflet.css"> -->
+
     <link rel="stylesheet" href="{{ STATIC_URL }}css/index.css">
+    <link rel="stylesheet" href="http://leaflet.cloudmade.com/dist/leaflet.css" />
 {% endblock extra_css %}
+
 
 {% block extra_js %}
     <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet.js"></script>
+
+    <script src="http://leaflet.cloudmade.com/dist/leaflet.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/index-map.js"></script>
     <script type="text/javascript" src="http://js.pusher.com/2.1/pusher.min.js" ></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/pusher-main.js"></script>
@@ -19,11 +24,11 @@
             <div class="input-group input-group-md">
                 <span class="input-group-addon">Filter by city</span>
                 <select class="form-control" name="city-filter">
-                    <option>no filter</option>
                     {% for data in aggregated_data %}
                     <option data-code="{{ data.city.code }}" data-name="{{ data.city.name }}"
                             data-latitude="{{ data.city.latitude }}" data-longitude="{{ data.city.longitude }}"
-                            data-weather-status="{{ data.weather_status }}">
+                            data-weather-status="{{ data.weather_status }}" data-zoom="88"
+                            {% if loop.first %}selected="selected"{% endif %}>
                         {{ data.city.name }}
                     </option>
                     {% endfor %}
