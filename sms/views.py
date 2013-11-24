@@ -70,6 +70,9 @@ def inbound_sms(request):
                 return HttpResponse(content=message,
                                     status=400)
             return response
+        else:
+            return HttpResponse("Blocked duplicate request from Youphoric",
+                                status=400)
     else:
         return redirect('index')
 
