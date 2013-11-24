@@ -19,3 +19,65 @@ body {
     color: #292929;
     background: #FFFFFF;
 }
+
+.navbar-brand img {
+    float: left;
+}
+.navbar-brand span {
+    font-size: 31px;
+    margin: 10px 0px 0 10px;
+    float: left;
+    display: block;
+    line-height: 26px;
+    letter-spacing: 10px;
+}
+
+/*TWITTER UPDTES BAR*/
+.shoutout-messages {  
+    background: #e74c3c;
+    padding: 0;
+}
+.shoutout-messages h4{
+    color: #Fff;
+    font-size: 16px;
+    font-weight: 200;
+    text-transform: uppercase;
+    padding: 10px 15px;
+    margin: 0;
+}
+.shoutout-messages .list-group{
+    margin-bottom: 2px;
+}
+.shoutout-messages .list-group-item:first-child, .shoutout-messages .list-group-item:last-child{
+    border-radius: 0;
+}
+
+/* MAIN CONTENT */
+.main-content .panel-default{
+    border:none;
+}
+.main-content .panel-body{
+    border: 1px solid #f1c40f;
+}
+.main-content .panel-default>.panel-heading{
+    border:none;
+    background: #f1c40f;
+    border-radius: 0;
+}
+.main-content .input-group-addon:first-child, .main-content .input-group .form-control:last-child{
+    border-radius: 0;
+    border: none;
+}
+@media (max-width: 767px) {
+    .main-content {
+        margin-top: 80px;
+    }
+    .navbar-brand{
+        text-align:center;
+        width: 100%;
+    }
+    .navbar-brand img, .navbar-brand span {
+        float: none;
+    }
+
+}

@@ -175,7 +175,7 @@ YOUPHORIC_TEST_MODE = True
 ACCOUNT_ID = ''
 
 # The user will send messages to this number (exclusive for SMART subscribers)
-ACCESS_CODE = '' 
+ACCESS_CODE = '68002' 
 
 # Add 'accountId', 'msisdn', and 'text' as GET parameters in this URL to send an outbound message
 OUTBOUND_URL = 'http://121.58.235.158/angelhack/smsout.php'

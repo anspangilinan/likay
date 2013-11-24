@@ -47,9 +47,11 @@ def inbound_sms(request):
         elif KEYWORD['info'] == content['text'][0]:
             response = info(content)
         else:
+            # TO-DO: Send sms to user that their sms format is invalid
+            message = 'ERROR: Formats are the following - SUB <city> <name(optional)>; UNSUB <city>; UNSUB ALL; INFO; MSG <message>;'
+            #send_sms(data['num'], message)
             return HttpResponse(content='INBOUND ERROR',
                                 status=400)
-            # TO-DO: Send sms to user that their sms format is invalid
         return response
     else:
         return redirect('index')
@@ -58,6 +60,7 @@ def inbound_sms(request):
 def location_list(city_string):
     location = Location.objects.filter(Q(code__iexact=city_string) | Q(name__iexact=city_string))
     return location
+
 
 def subscribe(data):
     """
@@ -76,9 +79,10 @@ def subscribe(data):
             if name:
                 subscriber.name = name
         if location[0] in subscriber.location.all():
-            return HttpResponse(content='SUBSCRIBE ERROR - Subscription to %s already exists' % location[0],
-                                status=400)
-            # TO-DO: reply to user that city subscription exists
+            message = 'SUBSCRIBE ERROR - Subscription to %s already exists' % location[0]
+            #send_sms(data['num'], message)
+            return HttpResponse(content = message,
+                                status  = 400)
         else:
             subscriber.location.add(location[0])
             subscriber.save()
@@ -86,7 +90,7 @@ def subscribe(data):
     else:
         # Send SMS to the user that the CITY is not valid
         message = invalid_city_message(city)
-        # send_sms(data['num'], message)
+        send_sms(data['num'], message)
         return HttpResponse(content='SUBSCRIBE ERROR - Invalid city: %s' % data['text'][1],
                             status=400)
 
@@ -103,21 +107,26 @@ def unsubscribe(data):
     if subscriber.exists() and data['text'][1] == 'ALL':
         subscriber = subscriber[0]
         subscriber.location.clear()
-        # TO-DO: confirmation reply that user is not subscribed
-        # to any cities anymore
-        return HttpResponse("UNSUBSCRIBE OK - User unsubscribed to all cities")
+        message = "UNSUBSCRIBE OK - User unsubscribed to all cities"
+        send_sms(data['num'], message)
+        return HttpResponse(message)
     if location.exists() and subscriber.exists():
         subscriber = subscriber[0]
         if location[0] in subscriber.location.all():
             subscriber.location.remove(location[0])
             subscriber.save()
-            return HttpResponse('UNSUBSCRIBE OK - User unsubscribed to %s' % location[0])
+            message = 'UNSUBSCRIBE OK - User unsubscribed to %s' % location[0]
+            #send_sms(data['num'], message)
+            return HttpResponse(message)
         else:
             # user is not subscribed to the city
-            return HttpResponse(content='UNSUBSCRIBE ERROR - User not subscribed to the city',
+            message = 'UNSUBSCRIBE ERROR - User not subscribed to the city'
+            #send_sms(data['num'], message)
+            return HttpResponse(content=message,
                                 status=400)
     else:
-        # location and user does not exist: do something
+        message = 'UNSUBSCRIBE ERROR - Subscriber and location does not exist'
+        #send_sms(data['num'], message)
         return HttpResponse(content='UNSUBSCRIBE ERROR - Subscriber and location does not exist',
                             status=400)
 
@@ -139,6 +148,8 @@ def post_message(data):
                             status=400)
     except Subscriber.DoesNotExist, e:
         # Error: Send error message
+        message = "MSG ERROR - You haven't subscribed yet. To subscribe text SUB <CITY> and send to %s." % settings.ACCESS_CODE
+        #send_sms(data['num'], message)
         return HttpResponse(content='MSG ERROR - Subscriber does not exist',
                             status=400)
     else:
@@ -146,7 +157,6 @@ def post_message(data):
         message = Message.objects.create(content=message,
                                          subscriber=subscriber)
         message.save()
-        # Add Facebook and twitter post here
         try:
             post_to_twitter(data['text'])
         except TwitterError, t:
@@ -164,23 +174,22 @@ def info(data):
     """
     try:
         num = str(data['num'])
-        print num
         subscriber = Subscriber.objects.get(phone=num)
-        print subscriber
         # http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/manila.json
         locations = subscriber.location.all()
         # Send messages for all locations of subscriber
-        message = ''
         for location in locations:
             weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/%s.json" % location.name.lower()
             response = json.loads(requests.get(weather_query).content)
             observation = response['current_observation']
-            message = "WeatherInfo: %s; %s; %s" % (observation['display_location']['city'], 
-                                                   observation['weather'],
-                                                   observation['temperature_string'])
+            message = "WeatherInfo - %s; %s; %s" % (observation['display_location']['city'], 
+                                                    observation['weather'],
+                                                    observation['temperature_string'])
             #send_sms(num, message)
         return HttpResponse('INFO OK')
     except Subscriber.DoesNotExist, e:
         # Error: send error message
+        message = "INFO ERROR - You haven't subscribed yet. To subscribe text SUB <CITY> and send to %s." % settings.ACCESS_CODE
+        #send_sms(data['num'], message)
         return HttpResponse(content='INFO ERROR - You need to subscribe',
                             status=400)
