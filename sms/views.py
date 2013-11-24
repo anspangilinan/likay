@@ -158,12 +158,13 @@ def post_message(data):
         message = Message.objects.create(content=message,
                                          subscriber=subscriber)
         message.save()
+        message = "%s - %s" % (message.subscriber.location.all(), data['text'])
         try:
-            post_to_twitter(data['text'])
+            post_to_twitter(message)
         except TwitterError, t:
             # Duplicate tweets error
             pass
-        post_to_facebook(data['text'])
+        post_to_facebook(message)
         realtime_post(data['text'])
         return HttpResponse("MSG OK - MESSAGE SENT!")
 
