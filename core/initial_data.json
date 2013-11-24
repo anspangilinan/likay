@@ -45,9 +45,9 @@
   "model": "core.location", 
   "fields": {
     "code": "BOR", 
-    "name": "Boracay",
-    "latitude": "11.9634",
-    "longitude": "121.9265"
+    "name": "Siquijor",
+    "latitude": "18.1961",
+    "longitude": "120.5925"
   }
 },
 {
@@ -65,9 +65,9 @@
   "model": "core.location", 
   "fields": {
     "code": "TAG", 
-    "name": "Bohol",
-    "latitude": "9.7922",
-    "longitude": "124.1506"
+    "name": "Tagbilaran",
+    "latitude": "9.6738",
+    "longitude": "123.8683"
   }
 },
 {
