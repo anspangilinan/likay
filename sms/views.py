@@ -34,12 +34,12 @@ def inbound_sms(request):
         # TO-DO PAT: check GET if 'smsc' is 'strikerS6800in1ngin' 
         # (and add that to source smsc in settings)?
         created = True
-        if 'svc_id' in request.GET:
-            svc_id = request.GET['svc_id']
-            inbound, created = InboundSMS.objects.get_or_create(svc_id=svc_id)
+        if 'rrn' in request.GET:
+            rrn = request.GET['rrn']
+            inbound, created = InboundSMS.objects.get_or_create(rrn=rrn)
 
             try:
-                inbound.rrn = request.GET['rrn']
+                inbound.svc_id = request.GET['svc_id']
                 inbound.sender = request.GET['from']
                 inbound.text = request.GET['text']
                 inbound.smsc = request.GET['smsc']
