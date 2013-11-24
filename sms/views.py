@@ -149,8 +149,8 @@ def post_message(data):
                             status=400)
     except Subscriber.DoesNotExist, e:
         # Error: Send error message
-        message = "MSG ERROR - You haven't subscribed yet. To subscribe text SUB <CITY> and send to %s." % settings.ACCESS_CODE
-        #send_sms(data['num'], message)
+        message = "You haven't subscribed yet. To subscribe text SUB <CITY> and send to %s." % settings.ACCESS_CODE
+        send_sms(data['num'], message)
         return HttpResponse(content='MSG ERROR - Subscriber does not exist',
                             status=400)
     else:
@@ -186,11 +186,11 @@ def info(data):
             message = "WeatherInfo - %s; %s; %s" % (observation['display_location']['city'], 
                                                     observation['weather'],
                                                     observation['temperature_string'])
-            #send_sms(num, message)
+            send_sms(num, message)
         return HttpResponse('INFO OK')
     except Subscriber.DoesNotExist, e:
         # Error: send error message
-        message = "INFO ERROR - You haven't subscribed yet. To subscribe text SUB <CITY> and send to %s." % settings.ACCESS_CODE
-        #send_sms(data['num'], message)
+        message = "You haven't subscribed yet. To subscribe text SUB <CITY> and send to %s." % settings.ACCESS_CODE
+        send_sms(data['num'], message)
         return HttpResponse(content='INFO ERROR - You need to subscribe',
                             status=400)
