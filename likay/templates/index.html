@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
-    <!--[if lte IE 8]>
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
-    <![endif]-->
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet-0.7/leaflet.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/index.css">
 {% endblock extra_css %}
 
 {% block extra_js %}
-    <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet-src.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-0.7/leaflet.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/index-map.js"></script>
     <script type="text/javascript" src="http://js.pusher.com/2.1/pusher.min.js" ></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/pusher-main.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/index-map.js"></script>
 {% endblock extra_js %}
 
 {% block main_content %}
@@ -66,14 +64,14 @@
     </div>
     <div class="row">
         <h2><i class="glyphicon glyphicon-cloud glyphicon-lg"></i> Weather Info</h2>
-        {% for city in city_status %}
+        {% for data in aggregated_data %}
         <div class="col-9 col-sm-9 col-lg-6">
-            <h4>{{ city.city|title }}</h4>
+            <h4>{{ data.city|title }}</h4>
             <p class="mute">
-            {{ city.subscribers }} Subscriber{{ city.subscribers|pluralize }}
+            {{ data.subscribers }} Subscriber{{ data.subscribers|pluralize }}
             </p>
             <p>
-            {{ city.status|title }}
+            {{ data.weather_status|title }}
             </p>
             <hr />
         </div>

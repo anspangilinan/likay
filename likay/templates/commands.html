@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block whole_content %}
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>List of SMS Commands</h3>
+                <small>Send them to <b>68002</b></small>
+            </div>
+            <div class="list-group">
+                <li class="list-group-item">
+                    <b>SUB (<a href="#codes">city-code*</a> or <a href="#codes">city-name*</a>) (name/optional)</b>- Subscribe to a city
+                </li>
+                <li class="list-group-item">
+                    <b>UNSUB (<a href="#codes">city-code*</a>)</b>- Unsubscribe to a city
+                </li>
+                <li class="list-group-item">
+                    <b>INFO</b>- Get weather status of subscribed city(ies)
+                </li>
+                <li class="list-group-item">
+                    <b>MSG (stream of message)</b>- Broadcast a message, a shoutout, whatever.
+                </li>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+        <div class="panel panel-default" id="codes">
+            <div class="panel-heading">
+                <h3>List of Cities and their respective codes</h3>
+            </div>
+            <div class="list-group">
+                {% for city in cities %}
+                <li class="list-group-item">
+                    {{ city.name }} - {{ city.code }}
+                </li>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock whole_content %}

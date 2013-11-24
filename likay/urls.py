@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'likay.views.index', name='index'),
+    url(r'^commands$', 'likay.views.wiki_commands', name='wiki_commands'),
     # url(r'^likay/', include('likay.foo.urls')),
     url(r'^sms/', include('sms.urls')),
     url(r'^accounts/', include('accounts.urls')),

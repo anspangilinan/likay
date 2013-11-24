@@ -45,3 +45,9 @@ def index(request, template="index.html"):
     }
     
     return render_to_response(template, context, RequestContext(request))
+
+def wiki_commands(request, template='commands.html'):
+    context = {
+        "cities": Location.objects.all().order_by("name")
+    }
+    return render_to_response(template, context, RequestContext(request))    
