@@ -27,7 +27,7 @@ def send_sms(number, message):
                                 params=params)
     else:
         print "======================"
-        print params['message']
+        print params['text']
         print "======================"
 
 
