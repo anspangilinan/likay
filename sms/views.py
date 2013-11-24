@@ -126,7 +126,7 @@ def unsubscribe(data):
             return HttpResponse(content=error_msg,
                                 status=400)
     else:
-        message = 'You do not have subscriptions to any city yet.' % location[0]
+        message = 'You do not have subscriptions to any city yet.'
         send_sms(data['num'], message)
         return HttpResponse(content='UNSUBSCRIBE ERROR - Subscriber and location does not exist',
                             status=400)
