@@ -131,14 +131,16 @@ def group_sub(data):
     location = location_list(city)
     subscriber = Subscriber.objects.filter(phone=data['num'])
 
+    import pdb; pdb.set_trace()
     if subscriber.exists():
         if location.exists():
             initiator_identifier = subscriber[0].name or subscriber[0].phone
             loc = location[0]
             success_msg = 'You were subscribed by %s for weather updates on the city of %s' % (initiator_identifier, loc)
             numbers = data['text'][2:][0].split(',')
+            import pdb; pdb.set_trace()
             for num in numbers:
-                to_be_subscribed, created = Subscriber.objects.get_or_create(phone=data['num'])
+                to_be_subscribed, created = Subscriber.objects.get_or_create(phone=num)
                 if created:
                     to_be_subscribed.location.add(loc)
                     to_be_subscribed.save()
