@@ -172,7 +172,7 @@ POST_ACCESS_TOKEN = 'CAACk2tC9zBYBAMdeGodZAJ00JNfPZBZAOzxUZBtlBJt2COY05tZBZAIoL2
 YOUPHORIC_TEST_MODE = True
 
 # The YouPhoric account ID which requires credits to do outbound messages
-ACCOUNT_ID = ''
+ACCOUNT_ID = 'c5f7bd18254fb2050e47b9749a485b12'
 
 # The user will send messages to this number (exclusive for SMART subscribers)
 ACCESS_CODE = '68002' 
