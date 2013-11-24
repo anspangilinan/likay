@@ -47,10 +47,9 @@ def inbound_sms(request):
         elif KEYWORD['info'] == content['text'][0]:
             response = info(content)
         else:
-            # TO-DO: Send sms to user that their sms format is invalid
-            message = 'ERROR: Formats are the following - SUB <city> <name(optional)>; UNSUB <city>; UNSUB ALL; INFO; MSG <message>;'
-            #send_sms(data['num'], message)
-            return HttpResponse(content='INBOUND ERROR',
+            message = 'Invalid Text Format: Formats are the following - SUB <city> <name(optional)>; UNSUB <city>; UNSUB ALL; INFO; MSG <message>;'
+            send_sms(content['num'], message)
+            return HttpResponse(content=message,
                                 status=400)
         return response
     else:
@@ -79,13 +78,15 @@ def subscribe(data):
             if name:
                 subscriber.name = name
         if location[0] in subscriber.location.all():
-            message = 'SUBSCRIBE ERROR - Subscription to %s already exists' % location[0]
-            #send_sms(data['num'], message)
-            return HttpResponse(content = message,
-                                status  = 400)
+            error_message = 'Subscription Error - Subscription to %s already exists' % location[0]
+            send_sms(data['num'], error_message)
+            return HttpResponse(content=error_message,
+                                status=400)
         else:
             subscriber.location.add(location[0])
             subscriber.save()
+            success_msg = 'You will now receive important weather updates for the city of %s' % location[0]
+            send_sms(data['num'], success_msg)
         return HttpResponse('SUBSCRIBE OK - User subscribed to %s' % location[0])
     else:
         # Send SMS to the user that the CITY is not valid
@@ -107,26 +108,26 @@ def unsubscribe(data):
     if subscriber.exists() and data['text'][1] == 'ALL':
         subscriber = subscriber[0]
         subscriber.location.clear()
-        message = "UNSUBSCRIBE OK - User unsubscribed to all cities"
-        send_sms(data['num'], message)
-        return HttpResponse(message)
+        success_msg = "You will stop receiving weather updates from cities anymore."
+        send_sms(data['num'], success_msg)
+        return HttpResponse(success_msg)
     if location.exists() and subscriber.exists():
         subscriber = subscriber[0]
         if location[0] in subscriber.location.all():
             subscriber.location.remove(location[0])
             subscriber.save()
-            message = 'UNSUBSCRIBE OK - User unsubscribed to %s' % location[0]
-            #send_sms(data['num'], message)
-            return HttpResponse(message)
+            success_msg = 'You will stop receiving weather updates for the city of %s.' % location[0]
+            send_sms(data['num'], success_msg)
+            return HttpResponse(success_msg)
         else:
             # user is not subscribed to the city
-            message = 'UNSUBSCRIBE ERROR - User not subscribed to the city'
-            #send_sms(data['num'], message)
-            return HttpResponse(content=message,
+            error_msg = 'Unsubscription Error: You are not subscribed to %s.' % location[0]
+            send_sms(data['num'], error_msg)
+            return HttpResponse(content=error_msg,
                                 status=400)
     else:
-        message = 'UNSUBSCRIBE ERROR - Subscriber and location does not exist'
-        #send_sms(data['num'], message)
+        message = 'You do not have subscriptions to any city yet.' % location[0]
+        send_sms(data['num'], message)
         return HttpResponse(content='UNSUBSCRIBE ERROR - Subscriber and location does not exist',
                             status=400)
 
