@@ -22,10 +22,13 @@ def send_sms(number, message):
         'text': message
     }
 
-
     if not settings.YOUPHORIC_TEST_MODE:
         send_sms = requests.get(settings.OUTBOUND_URL,
                                 params=params)
+    else:
+        print "======================"
+        print params['message']
+        print "======================"
 
 
 def post_to_twitter(message):
