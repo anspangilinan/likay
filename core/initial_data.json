@@ -44,10 +44,10 @@
   "pk": 5, 
   "model": "core.location", 
   "fields": {
-    "code": "BOR", 
-    "name": "Siquijor",
-    "latitude": "18.1961",
-    "longitude": "120.5925"
+    "code": "BLT", 
+    "name": "Puerto Princesa",
+    "latitude": "9.9752",
+    "longitude": "118.7761"
   }
 },
 {
