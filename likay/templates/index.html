@@ -24,12 +24,16 @@
             <div class="input-group input-group-md">
                 <span class="input-group-addon">Filter by city</span>
                 <select class="form-control" name="city-filter">
+                    <option data-name="philippines"
+                            data-latitude="11.6722" data-longitude="122.9627"
+                            data-weather-status="zxcv" data-zoom="5"
+                            data-subscribers="0"
+                            selected="selected">Philippines</option>
                     {% for data in aggregated_data %}
                     <option data-code="{{ data.city.code }}" data-name="{{ data.city.name }}"
                             data-latitude="{{ data.city.latitude }}" data-longitude="{{ data.city.longitude }}"
                             data-weather-status="{{ data.weather_status }}" data-zoom="8"
-                            data-subscribers="{{ data.subscribers }}"
-                            {% if loop.first %}selected="selected"{% endif %}>
+                            data-subscribers="{{ data.subscribers }}">
                         {{ data.city.name }}
                     </option>
                     {% endfor %}

@@ -20,13 +20,17 @@ $(document).ready(function(event) {
             weatherStatus = $selected.data('weather-status');
 
         map.setView([latitude, longitude]);
-        map.setZoom(zoom)
+        map.setZoom(zoom);
+        
+        if ( name == "philippines" )
+            return;
+        else {
+            var marker = L.marker([latitude, longitude]).addTo(map),
+                cText = "<b>" + name + "</b>",
+                wsText = weatherStatus,
+                sText = "Subscribers: " + subscribers;
 
-        var marker = L.marker([latitude, longitude]).addTo(map),
-            cText = "<b>" + name + "</b>",
-            wsText = weatherStatus,
-            sText = "Subscribers: " + subscribers;
-
-        marker.bindPopup(cText + "<br />" + wsText + "<br/>" + sText).openPopup();
+            marker.bindPopup(cText + "<br />" + wsText + "<br/>" + sText).openPopup();
+        }
     });
 });
