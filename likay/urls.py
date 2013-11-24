@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', 'likay.views.index', name='index'),
     # url(r'^likay/', include('likay.foo.urls')),
     url(r'^sms/', include('sms.urls')),
+    url(r'^accounts/', include('accounts.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -1,0 +1,7 @@
+<form method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+Location: <input type="text" value="{{ moderator.location }}" readonly="readonly"/>
+<br />
+<input type="submit" value="Send" />
+</form>

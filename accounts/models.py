@@ -1,5 +1,7 @@
 from django.db import models
 from core.models import Location
+from django.contrib.auth.models import User
+
 
 _optional_kwargs = {
     'null': True,
@@ -17,3 +19,11 @@ class Subscriber(models.Model):
 
     def __unicode__(self):
         return "%s" % self.name
+
+
+class Moderator(models.Model):
+    """
+    Groups that can send custom sms to specific location
+    """
+    user     = models.ForeignKey(User)
+    location = models.ForeignKey(Location)
