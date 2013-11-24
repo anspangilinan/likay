@@ -5,8 +5,8 @@
   "fields": {
     "code": "CBU", 
     "name": "Cebu",
-    "latitude": "10.3537",
-    "longitude": "123.8477"
+    "latitude": "10.3153",
+    "longitude": "123.8972"
   }
 },
 {
@@ -15,8 +15,8 @@
   "fields": {
     "code": "DVO", 
     "name": "Davao",
-    "latitude": "7.2517",
-    "longitude": "125.4270"
+    "latitude": "7.0769",
+    "longitude": "125.6105"
 
   }
 },
