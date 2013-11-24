@@ -13,7 +13,7 @@ from sms.views import KEYWORD
 
 def index(request, template="index.html"):
     context = {}
-    cities = []
+    aggregated_data = []
 
     today = datetime.today()
     start_date = datetime(today.year, today.month, today.day)
@@ -24,12 +24,13 @@ def index(request, template="index.html"):
                                       date_received__lte=end_date)
     
     for location in Location.objects.all():
-        weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/%s.json" % location.name.lower()
-        response = json.loads(requests.get(weather_query).content)
-        observation = response['current_observation']
-        weather_status = "WeatherInfo - %s; %s" % (observation['weather'],
-                                                observation['temperature_string'])
-        cities.append({
+        # weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/%s.json" % location.name.lower()
+
+        # response = json.loads(requests.get(weather_query).content)
+        # observation = response['current_observation']
+        # weather_status = "WeatherInfo - %s; %s" % (observation['weather'], observation['temperature_string'])
+        weather_status = "SHAPAROOSH KA"
+        aggregated_data.append({
             "city": location,
             "weather_status": weather_status,
             "subscribers": Subscriber.objects.filter(location=location).count()
@@ -40,7 +41,7 @@ def index(request, template="index.html"):
 
     context = {
         "messages": messages,
-        "cities": cities
+        "aggregated_data": aggregated_data
     }
     
     return render_to_response(template, context, RequestContext(request))
