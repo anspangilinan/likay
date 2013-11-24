@@ -27,7 +27,8 @@
                     {% for data in aggregated_data %}
                     <option data-code="{{ data.city.code }}" data-name="{{ data.city.name }}"
                             data-latitude="{{ data.city.latitude }}" data-longitude="{{ data.city.longitude }}"
-                            data-weather-status="{{ data.weather_status }}" data-zoom="88"
+                            data-weather-status="{{ data.weather_status }}" data-zoom="8"
+                            data-subscribers="{{ data.subscribers }}"
                             {% if loop.first %}selected="selected"{% endif %}>
                         {{ data.city.name }}
                     </option>

@@ -25,7 +25,6 @@ def index(request, template="index.html"):
     
     for location in Location.objects.all():
         weather_query = "http://api.wunderground.com/api/e8f40aeb79ff08f8/geolookup/conditions/q/ph/%s.json" % location.name.lower()
-
         response = json.loads(requests.get(weather_query).content)
         observation = response['current_observation']
         weather_status = "WeatherInfo - %s; %s" % (observation['weather'], observation['temperature_string'])
