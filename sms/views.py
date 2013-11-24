@@ -7,10 +7,11 @@ from twitter import TwitterError
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.conf import settings
 
 # Models
 from accounts.models import Subscriber
-from core.models import Location
+from core.models import Location, InboundSMS
 from sms.models import Message
 
 # Utils
@@ -32,26 +33,43 @@ def inbound_sms(request):
     if request.method == "GET" and 'text' in request.GET and 'from' in request.GET:
         # TO-DO PAT: check GET if 'smsc' is 'strikerS6800in1ngin' 
         # (and add that to source smsc in settings)?
-        content = {
-            'text': request.GET['text'].split(),
-            'num': request.GET['from']
-        }
-        if KEYWORD['subscribe'] == content['text'][0]:
-            response = subscribe(content)
-        elif KEYWORD['unsubscribe'] == content['text'][0]:
-            response = unsubscribe(content)
-        elif KEYWORD['message'] == content['text'][0]:
-            message = request.GET.get('text').replace(KEYWORD['message'] + ' ', '')
-            content['text'] = message
-            response = post_message(content)
-        elif KEYWORD['info'] == content['text'][0]:
-            response = info(content)
-        else:
-            message = 'Invalid Text Format: Formats are the following - SUB <city> <name(optional)>; UNSUB <city>; UNSUB ALL; INFO; MSG <message>;'
-            send_sms(content['num'], message)
-            return HttpResponse(content=message,
-                                status=400)
-        return response
+        created = True
+        if 'svc_id' in request.GET:
+            svc_id = request.GET['svc_id']
+            inbound, created = InboundSMS.objects.get_or_create(svc_id=svc_id)
+
+            try:
+                inbound.rrn = request.GET['rrn']
+                inbound.sender = request.GET['from']
+                inbound.text = request.GET['text']
+                inbound.smsc = request.GET['smsc']
+                inbound.utime = request.GET['utime']
+                inbound.to = request.GET['to']
+                inbound.save()
+            except:
+                pass
+
+        if created:
+            content = {
+                'text': request.GET['text'].split(),
+                'num': request.GET['from']
+            }
+            if KEYWORD['subscribe'] == content['text'][0]:
+                response = subscribe(content)
+            elif KEYWORD['unsubscribe'] == content['text'][0]:
+                response = unsubscribe(content)
+            elif KEYWORD['message'] == content['text'][0]:
+                message = request.GET.get('text').replace(KEYWORD['message'] + ' ', '')
+                content['text'] = message
+                response = post_message(content)
+            elif KEYWORD['info'] == content['text'][0]:
+                response = info(content)
+            else:
+                message = 'Invalid Text Format: Formats are the following - SUB <city> <name(optional)>; UNSUB <city>; UNSUB ALL; INFO; MSG <message>;'
+                send_sms(content['num'], message)
+                return HttpResponse(content=message,
+                                    status=400)
+            return response
     else:
         return redirect('index')
 
